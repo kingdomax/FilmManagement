@@ -9,13 +9,13 @@ namespace FilmManagement.Services
         private readonly FilmRepository _filmRepository;
         public FilmService() => _filmRepository = new FilmRepository();
 
-        public BundleResult GetBundleResult()
+        public BundleResult GetBundleResult(string username)
         {
             return new BundleResult
             {
                 Films = GetFilms(),
                 Persons = GetPersons(),
-                SuggestionFilms = GetSuggestionFilms(),
+                SuggestionFilms = GetSuggestionFilms(username),
             };
         }
 
@@ -70,7 +70,7 @@ namespace FilmManagement.Services
             return persons;
         }
 
-        private IEnumerable<Film> GetSuggestionFilms()
+        private IEnumerable<Film> GetSuggestionFilms(string username)
         {
             return new List<Film>();
         }

@@ -1,5 +1,9 @@
 function fetchAndUpdateUsername() {
+    var username = (new URL(document.location)).searchParams.get("username") || 'admin1';
     
+    window.username = username;
+    document.getElementById('userName').innerText = username;
+    $("#userAvatar").attr('src', `assets/images/${username}.jpg`);
 }
 
 function fetchAndUpdateBundleResult() {

@@ -11,11 +11,11 @@ namespace FilmManagement.Controllers
         private readonly FilmService _filmService;
         public FilmController() => _filmService = new FilmService();
 
-        [HttpGet]  // http://localhost:5000/api/film
-        public BundleResult Get()
+        [HttpGet("{username}")]  // http://localhost:5000/api/film/admin2
+        public BundleResult Get(string username)
         {
             // todo: need to modify to POST since we need userid for suggestionfilmes
-            return _filmService.GetBundleResult();
+            return _filmService.GetBundleResult(username);
         }
 
         #region example
