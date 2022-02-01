@@ -1,4 +1,4 @@
-function renderLeftPost(film, containerClass) {
+function renderLeftPost(index, film, containerClass) {
     return `<div class='left-image-post ${containerClass}'>
                 <div class='row'>
                     <div class='col-md-6'>
@@ -18,7 +18,7 @@ function renderLeftPost(film, containerClass) {
                             <p><b>Director: &nbsp;</b>${film.producer}</p>
                             <p><b>Writer: &nbsp;</b>${film.writer}</p>
                             <p><b>Actor: &nbsp;</b>${film.actor}</p>
-                            <div class='white-button' id='filmDelete' data-section=''>
+                            <div class='white-button' id='filmDelete' data-section='${index}'>
                                 <a href='#'>DELETE</a>
                             </div>
                         </div>
@@ -27,7 +27,7 @@ function renderLeftPost(film, containerClass) {
             </div>`;
 }
 
-function renderRightPost(film, containerClass) {
+function renderRightPost(index, film, containerClass) {
     return `<div class='right-image-post ${containerClass}'>
                 <div class='row'>
                     <div class='col-md-6'>
@@ -42,7 +42,7 @@ function renderRightPost(film, containerClass) {
                             <p><b>Director: &nbsp;</b>${film.producer}</p>
                             <p><b>Writer: &nbsp;</b>${film.writer}</p>
                             <p><b>Actor: &nbsp;</b>${film.actor}</p>
-                            <div class='white-button' id='filmDelete' data-section=''>
+                            <div class='white-button' id='filmDelete' data-section='${index}'>
                                 <a href='#'>DELETE</a>
                             </div>
                         </div>
@@ -64,7 +64,10 @@ function displayAllFilms(films) {
     var filmList = '';
     for (var i=0; i<films.length; i++) {
         var renderFunc = i%2==0 ? renderLeftPost : renderRightPost;
-        var film = renderFunc(films[i], i==0 ? '' : 'next-post');
+        var film = renderFunc(
+            i,
+            films[i],
+            i!==0 ? 'next-post' : '');
 
         filmList += film;
     }

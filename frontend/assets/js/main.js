@@ -24,6 +24,10 @@ function fetchBundleResult() {
 
             loadingBackdrop.hide();
         }, 1000);
+    }).fail(function(xhr, status, errorThrown) {
+        document.getElementById('modal-content').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                ${status}, ${errorThrown}
+                                                              </div>`;
     });
 }
 
