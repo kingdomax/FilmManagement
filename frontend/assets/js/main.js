@@ -13,7 +13,7 @@ function fetchAndUpdateBundleResult() {
 
     // https://api.jquery.com/jquery.ajax/
     $.ajax({
-        url: 'http://localhost:5000/api/film',
+        url: `http://localhost:5000/api/film/${window.username}`,
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',

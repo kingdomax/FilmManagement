@@ -15,13 +15,13 @@ namespace FilmManagement.Services
             {
                 Films = GetFilms(),
                 Persons = GetPersons(),
-                SuggestionFilms = GetSuggestionFilms(username),
+                SuggestionFilms = GetFilms(username),
             };
         }
 
-        private IEnumerable<Film> GetFilms()
+        private IEnumerable<Film> GetFilms(string username = "")
         {
-            var resultFromDB = _filmRepository.FetchFilms();
+            var resultFromDB = _filmRepository.FetchFilms(username);
 
             var films = new List<Film>();
             for (var i=0; i<resultFromDB.Count; i++)
@@ -41,7 +41,7 @@ namespace FilmManagement.Services
                     Distributor = resultFromDB[i].Distributor,
                     Overview = resultFromDB[i].Overview,
                     Rating = resultFromDB[i].Rating,
-                    ImgPath = $"film{i%8}.jpg",
+                    ImgPath = "film0.jpg",
                 });
             }
 
@@ -68,11 +68,6 @@ namespace FilmManagement.Services
             }
 
             return persons;
-        }
-
-        private IEnumerable<Film> GetSuggestionFilms(string username)
-        {
-            return new List<Film>();
         }
     }
 }

@@ -16,9 +16,10 @@ namespace FilmManagement.Repositories
             _connection.Open();
         }
 
-        public List<FilmDTO> FetchFilms()
+        public List<FilmDTO> FetchFilms(string username)
         {
-            using var cmd = new NpgsqlCommand("SELECT * FROM show_film();", _connection);
+            var command = string.IsNullOrEmpty(username) ? "SELECT * FROM show_film();" : $"SELECT * FROM show_suggestion('{username}')";
+            using var cmd = new NpgsqlCommand(command, _connection);
             using var reader = cmd.ExecuteReader();
 
             var resultFromDB = new List<FilmDTO>();
