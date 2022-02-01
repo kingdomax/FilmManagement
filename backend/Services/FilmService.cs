@@ -14,16 +14,16 @@ namespace FilmManagement.Services
             return new BundleResult
             {
                 Films = GetFilms(),
-                Person = GetPerson(),
-                FilmsSuggestion = GetFilmsSuggestion(),
+                Persons = GetPersons(),
+                SuggestionFilms = GetSuggestionFilms(),
             };
         }
 
         private IEnumerable<Film> GetFilms()
         {
-            var films = new List<Film>();
-            var resultFromDB = _filmRepository.FetchAllFilms();
+            var resultFromDB = _filmRepository.FetchFilms();
 
+            var films = new List<Film>();
             for (var i=0; i<resultFromDB.Count; i++)
             {
                 films.Add(new Film
@@ -48,12 +48,29 @@ namespace FilmManagement.Services
             return films;
         }
 
-        private IEnumerable<Person> GetPerson()
+        private IEnumerable<Person> GetPersons()
         {
-            return new List<Person>();
+            var resultFromDB = _filmRepository.FetchPersons();
+
+            var persons = new List<Person>();
+            for (var i = 0; i < resultFromDB.Count; i++)
+            {
+                persons.Add(new Person
+                {
+                    Name = resultFromDB[i].Name,
+                    Dob = resultFromDB[i].Dob,
+                    Sex = resultFromDB[i].Sex,
+                    Roles = resultFromDB[i].Roles,
+                    Films = resultFromDB[i].Films,
+
+                    ImgPath = "person0.jpg",
+                });
+            }
+
+            return persons;
         }
 
-        private IEnumerable<Film> GetFilmsSuggestion()
+        private IEnumerable<Film> GetSuggestionFilms()
         {
             return new List<Film>();
         }

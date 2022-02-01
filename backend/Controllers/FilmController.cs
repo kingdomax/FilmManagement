@@ -14,6 +14,7 @@ namespace FilmManagement.Controllers
         [HttpGet]  // http://localhost:5000/api/film
         public BundleResult Get()
         {
+            // todo: need to modify to POST since we need userid for suggestionfilmes
             return _filmService.GetBundleResult();
         }
 

@@ -56,22 +56,19 @@ function renderRightPost(index, film, containerClass) {
             </div>`;
 }
 
-function bindEvents() {
+function bindFilmEvents() {
 
 }
 
-function displayAllFilms(films) {
+function renderFilms(films) {
     var filmList = '';
+    
     for (var i=0; i<films.length; i++) {
         var renderFunc = i%2==0 ? renderLeftPost : renderRightPost;
-        var film = renderFunc(
-            i,
-            films[i],
-            i!==0 ? 'next-post' : '');
-
+        var film = renderFunc(i, films[i], i!==0 ? 'next-post' : '');
         filmList += film;
     }
+    
     document.getElementById('filmList').innerHTML = filmList;
-
-    bindEvents();
+    bindFilmEvents();
 }

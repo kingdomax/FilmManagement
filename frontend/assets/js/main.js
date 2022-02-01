@@ -1,4 +1,8 @@
-function fetchBundleResult() {
+function fetchAndUpdateUsername() {
+    
+}
+
+function fetchAndUpdateBundleResult() {
     // https://getbootstrap.com/docs/5.1/components/modal/
     var loadingBackdrop = new bootstrap.Modal(document.getElementById('loadingBackdrop'), { keyboard: false });
     loadingBackdrop.show();
@@ -18,9 +22,16 @@ function fetchBundleResult() {
         console.log(data);
         window.bundleResult = data;
 
-        // update films, person, suggestion film UI, hide backdrop
+        // re-render UI
         setTimeout(() => {
-            displayAllFilms(data.films);
+            renderFilms(data.films);
+            renderPersons(data.persons);
+            renderSuggestionFilms(data.suggestionFilms);
+            // render all persons
+            // render all suggestion
+
+            // binding add film event
+            // binding add person event
 
             loadingBackdrop.hide();
         }, 1000);
@@ -31,4 +42,7 @@ function fetchBundleResult() {
     });
 }
 
-$(document).ready(fetchBundleResult());
+$(document).ready(function() {
+    fetchAndUpdateUsername();
+    fetchAndUpdateBundleResult();
+});

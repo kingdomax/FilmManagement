@@ -380,6 +380,13 @@ button:hover {
     border-radius: 5px;
 }
 
+.left-image .person-img,
+.right-image .person-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+}
+
 .right-image-post h4,
 .left-image-post h4 {
     /*margin-top: 30px;*/
