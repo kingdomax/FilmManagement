@@ -71,14 +71,27 @@ namespace FilmManagement.Repositories
             using var connection = new NpgsqlConnection(_connextionString);
             connection.Open();
 
-            var query = $"SELECT * FROM remove_film(" +
-                $"'{film.Title}'," +
-                $"'{film.Subordinate}'," +
-                $"'{film.Director}'," +
-                $"'{film.Writer}'," +
-                $"'{film.Producer}'," +
-                $"'{film.Actor}')";
-            using var cmd = new NpgsqlCommand(query, connection);
+            using var cmd = new NpgsqlCommand("SELECT * FROM remove_film(@title, @subordinate, @director, @writer, @producer, @actor)", connection);
+            cmd.Parameters.AddWithValue("@name", film.Title);
+            cmd.Parameters.AddWithValue("@films", film.Subordinate);
+            cmd.Parameters.AddWithValue("@name", film.Director);
+            cmd.Parameters.AddWithValue("@films", film.Writer);
+            cmd.Parameters.AddWithValue("@name", film.Producer);
+            cmd.Parameters.AddWithValue("@films", film.Actor);
+            using var reader = cmd.ExecuteReader();
+
+            reader.Read();
+            return !reader.IsDBNull(0) ? reader.GetBoolean(0) : false;
+        }
+
+        public bool DeletePerson(DeletedPerson person)
+        {
+            using var connection = new NpgsqlConnection(_connextionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT * FROM remove_person(@name, @films)", connection);
+            cmd.Parameters.AddWithValue("@name", person.Name);
+            cmd.Parameters.AddWithValue("@films", person.Films);
             using var reader = cmd.ExecuteReader();
 
             reader.Read();

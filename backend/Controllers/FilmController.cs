@@ -23,5 +23,11 @@ namespace FilmManagement.Controllers
         {
             return _filmService.DeleteFilm(film);
         }
+
+        [HttpPost] // http://localhost:5000/api/film/DeletePerson
+        public string DeletePerson([FromBody] DeletedPerson person)
+        {
+            return _filmService.DeletePerson(person);
+        }
     }
 }

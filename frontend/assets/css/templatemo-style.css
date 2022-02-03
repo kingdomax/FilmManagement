@@ -360,7 +360,7 @@ button:hover {
     color: #fff;
 }
 
-.btn-film {
+.btn-film, .btn-person {
     margin-right: 10px;
 }
 

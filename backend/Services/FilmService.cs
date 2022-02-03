@@ -76,5 +76,11 @@ namespace FilmManagement.Services
             var resultFromDB = _filmRepository.DeleteFilm(film);
             return resultFromDB ? "SUCCESS" : "FAILED";
         }
+
+        public string DeletePerson(DeletedPerson person)
+        {
+            var resultFromDB = _filmRepository.DeletePerson(person);
+            return resultFromDB ? "SUCCESS" : "FAILED";
+        }
     }
 }

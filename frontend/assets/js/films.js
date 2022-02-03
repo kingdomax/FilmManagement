@@ -56,6 +56,7 @@ function renderRightPost(index, film, containerClass) {
 
 function bindDeleteFilmEvents() {
     // Delete button on movie list
+    $('.film .btn-film-delete').unbind('click');
     $('.film .btn-film-delete').bind('click', function() {
         window.currentFilm = parseInt(this.dataset.section);
         
@@ -65,6 +66,7 @@ function bindDeleteFilmEvents() {
     });
 
     // Delete button on modal
+    $('#deleteFilmModal .btn-film-delete').unbind('click');
     $('#deleteFilmModal .btn-film-delete').bind('click', function() {
         this.disabled = true;
         document.querySelector('#deleteFilmModal .btn-secondary').disabled = true;

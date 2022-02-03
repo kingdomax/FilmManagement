@@ -1,5 +1,5 @@
 function renderPerson(index, person, containerClass) {
-    return  `<div class='left-image-post ${containerClass}'>
+    return  `<div class='person left-image-post ${containerClass}'>
                 <div class='row'>
                     <div class='col-md-2'>
                         <div class='left-image'>
@@ -13,27 +13,41 @@ function renderPerson(index, person, containerClass) {
                             <p><b>Born: &nbsp;</b>${person.dob}</p>
                             <p><b>Roles: &nbsp;</b>${person.roles}</p>
                             <p><b>Films: &nbsp;</b>${person.films}</p>
-                            <div class='white-button' id='personDelete' data-section='${index}'>
-                                <a href='#'>DELETE</a>
-                            </div>
+                            <button type='button' class='btn btn-primary btn-person' data-section='${index}'>EDIT</button>
+                            <button type="button" class='btn btn-danger btn-person btn-person-delete' data-section='${index}'>DELETE</button>
                         </div>
                     </div>
                 </div>
             </div>`;
 }
 
-function bindPersonEvents() {
+function bindDeletePersonEvents() {
+    // Delete button on person
+    $('.person .btn-person-delete').unbind('click');
+    $('.person .btn-person-delete').bind('click', function() {
+        window.currentPerson = parseInt(this.dataset.section);
+        
+        var deletePersonModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deletePersonModal'));
+        document.querySelector('#deletePersonModal .modal-body').innerHTML = `Are you sure to remove <b>"${window.bundleResult.persons[window.currentPerson].name}"</b> and its related information from the database?`;
+        deletePersonModal.show();
+    });
 
+    // Delete button on modal
+    $('#deletePersonModal .btn-person-delete').unbind('click');
+    $('#deletePersonModal .btn-person-delete').bind('click', function() {
+        this.disabled = true;
+        document.querySelector('#deletePersonModal .btn-secondary').disabled = true;
+        requestToDeletePerson();
+    });
 }
 
 function renderPersons(persons) {
     var personList = '';
-    
     for (var i=0; i<persons.length; i++) {
         var person = renderPerson(i, persons[i], i!==0 ? 'next-post' : '');
         personList += person;
     }
-    
     document.getElementById('personList').innerHTML = personList;
-    bindPersonEvents();
+
+    bindDeletePersonEvents();
 }
