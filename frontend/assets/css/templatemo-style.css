@@ -360,6 +360,9 @@ button:hover {
     color: #fff;
 }
 
+.btn-film {
+    margin-right: 10px;
+}
 
 /* Left & Right Post */
 
@@ -592,13 +595,13 @@ figure.snip1321 span {
 }
 figure.snip1321 i {
   position: relative!important;
-  font-size: 18px;
+  font-size: 0px;
   background-color: #a43f49;
   width: 40px;
-  height: 40px;
+  height: 34px;
   display: inline-block;
   text-align: center;
-  line-height: 40px;
+  line-height: 34px;
   border-radius: 5px;
   color: #fff;
 }

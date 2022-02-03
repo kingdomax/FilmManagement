@@ -455,7 +455,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="loadingBackdrop" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="loadingModal" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog" style="text-align: center;">
         <div class="modal-content" id="modal-content">
           <div class="modal-body">
@@ -466,6 +466,24 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="deleteFilmModal" data-bs-backdrop="static" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">DELETE</h5>
+          </div>
+          <div class="modal-body">
+            Are you sure to remove <b>"The Kings Man"</b> and its related information from the database?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCLE</button>
+            <button type="button" class="btn btn-danger btn-film-delete">DELETE</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
   </body>
 
   <!-- Bootstrap core JavaScript -->

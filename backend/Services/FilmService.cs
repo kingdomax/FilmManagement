@@ -1,6 +1,7 @@
 ﻿using FilmManagement.Models;
 using System.Collections.Generic;
 using FilmManagement.Repositories;
+using FilmManagement.Models.Request;
 
 namespace FilmManagement.Services
 {
@@ -15,7 +16,7 @@ namespace FilmManagement.Services
             {
                 Films = GetFilms(),
                 Persons = GetPersons(),
-                SuggestionFilms = GetFilms(username),
+                SuggestionFilms = GetFilms(username), // todo-moch
             };
         }
 
@@ -68,6 +69,12 @@ namespace FilmManagement.Services
             }
 
             return persons;
+        }
+
+        public string DeleteFilm(DeletedFilm film)
+        {
+            var resultFromDB = _filmRepository.DeleteFilm(film);
+            return resultFromDB ? "SUCCESS" : "FAILED";
         }
     }
 }
