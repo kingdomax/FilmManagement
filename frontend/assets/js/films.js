@@ -54,6 +54,16 @@ function renderRightPost(index, film, containerClass) {
             </div>`;
 }
 
+function renderAllFilms(films) {
+    var filmList = '';
+    for (var i=0; i<films.length; i++) {
+        var renderFunc = i%2==0 ? renderLeftPost : renderRightPost;
+        var film = renderFunc(i, films[i], i!==0 ? 'next-post' : '');
+        filmList += film;
+    }
+    document.getElementById('filmList').innerHTML = filmList;
+}
+
 function bindDeleteFilmEvents() {
     // Delete button on movie list
     $('.film .btn-film-delete').unbind('click');
@@ -62,6 +72,9 @@ function bindDeleteFilmEvents() {
         
         var deleteFilmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteFilmModal'));
         document.querySelector('#deleteFilmModal .modal-body').innerHTML = `Are you sure to remove <b>"${window.bundleResult.films[window.currentFilm].title}"</b> and its related information from the database?`;
+        document.querySelector('#deleteFilmModal .btn-secondary').disabled = false;
+        document.querySelector('#deleteFilmModal .btn-film-delete').disabled = false;
+        
         deleteFilmModal.show();
     });
 
@@ -70,18 +83,11 @@ function bindDeleteFilmEvents() {
     $('#deleteFilmModal .btn-film-delete').bind('click', function() {
         this.disabled = true;
         document.querySelector('#deleteFilmModal .btn-secondary').disabled = true;
-        requestToDeleteFilm();
+        requestToDeleteFilm(window.bundleResult.films[window.currentFilm]);
     });
 }
 
 function renderFilms(films) {
-    var filmList = '';
-    for (var i=0; i<films.length; i++) {
-        var renderFunc = i%2==0 ? renderLeftPost : renderRightPost;
-        var film = renderFunc(i, films[i], i!==0 ? 'next-post' : '');
-        filmList += film;
-    }
-    document.getElementById('filmList').innerHTML = filmList;
-
+    renderAllFilms(films);
     bindDeleteFilmEvents();
 }

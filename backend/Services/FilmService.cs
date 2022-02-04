@@ -71,6 +71,18 @@ namespace FilmManagement.Services
             return persons;
         }
 
+        public string AddFilm(AddedFilm film)
+        {
+            var resultFromDB = _filmRepository.AddFilm(film);
+            return resultFromDB ? "SUCCESS" : "FAILED";
+        }
+
+        public string AddPerson(AddedPerson person)
+        {
+            var resultFromDB = _filmRepository.AddPerson(person);
+            return resultFromDB ? "SUCCESS" : "FAILED";
+        }
+
         public string DeleteFilm(DeletedFilm film)
         {
             var resultFromDB = _filmRepository.DeleteFilm(film);

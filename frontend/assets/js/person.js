@@ -21,6 +21,15 @@ function renderPerson(index, person, containerClass) {
             </div>`;
 }
 
+function renderAllPersons(persons) {
+    var personList = '';
+    for (var i=0; i<persons.length; i++) {
+        var person = renderPerson(i, persons[i], i!==0 ? 'next-post' : '');
+        personList += person;
+    }
+    document.getElementById('personList').innerHTML = personList;
+}
+
 function bindDeletePersonEvents() {
     // Delete button on person
     $('.person .btn-person-delete').unbind('click');
@@ -29,6 +38,9 @@ function bindDeletePersonEvents() {
         
         var deletePersonModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deletePersonModal'));
         document.querySelector('#deletePersonModal .modal-body').innerHTML = `Are you sure to remove <b>"${window.bundleResult.persons[window.currentPerson].name}"</b> and its related information from the database?`;
+        document.querySelector('#deletePersonModal .btn-secondary').disabled = false;
+        document.querySelector('#deletePersonModal .btn-person-delete').disabled = false;
+        
         deletePersonModal.show();
     });
 
@@ -37,17 +49,11 @@ function bindDeletePersonEvents() {
     $('#deletePersonModal .btn-person-delete').bind('click', function() {
         this.disabled = true;
         document.querySelector('#deletePersonModal .btn-secondary').disabled = true;
-        requestToDeletePerson();
+        requestToDeletePerson(window.bundleResult.persons[window.currentPerson]);
     });
 }
 
 function renderPersons(persons) {
-    var personList = '';
-    for (var i=0; i<persons.length; i++) {
-        var person = renderPerson(i, persons[i], i!==0 ? 'next-post' : '');
-        personList += person;
-    }
-    document.getElementById('personList').innerHTML = personList;
-
+    renderAllPersons(persons);
     bindDeletePersonEvents();
 }

@@ -66,18 +66,53 @@ namespace FilmManagement.Repositories
             return resultFromDB;
         }
 
+        public bool AddFilm(AddedFilm film)
+        {
+            using var connection = new NpgsqlConnection(_connextionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT * FROM add_film(@title, @release, @subordinate, @genre, @distributor, @overview)", connection);
+            cmd.Parameters.AddWithValue("@title", film.Title);
+            cmd.Parameters.AddWithValue("@release", film.ReleaseYear);
+            cmd.Parameters.AddWithValue("@subordinate", film.Subordinate);
+            cmd.Parameters.AddWithValue("@genre", film.Genre);
+            cmd.Parameters.AddWithValue("@distributor", film.Distributor);
+            cmd.Parameters.AddWithValue("@overview", film.Overview);
+            using var reader = cmd.ExecuteReader();
+
+            reader.Read();
+            return !reader.IsDBNull(0) ? reader.GetBoolean(0) : false;
+        }
+
+        public bool AddPerson(AddedPerson person)
+        {
+            using var connection = new NpgsqlConnection(_connextionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT * FROM add_person(@name, @dob, @sex, @roles, @films)", connection);
+            cmd.Parameters.AddWithValue("@name", person.Name);
+            cmd.Parameters.AddWithValue("@dob", person.Dob);
+            cmd.Parameters.AddWithValue("@sex", person.Sex);
+            cmd.Parameters.AddWithValue("@roles", person.Roles);
+            cmd.Parameters.AddWithValue("@films", person.Films);
+            using var reader = cmd.ExecuteReader();
+
+            reader.Read();
+            return !reader.IsDBNull(0) ? reader.GetBoolean(0) : false;
+        }
+
         public bool DeleteFilm(DeletedFilm film)
         {
             using var connection = new NpgsqlConnection(_connextionString);
             connection.Open();
 
             using var cmd = new NpgsqlCommand("SELECT * FROM remove_film(@title, @subordinate, @director, @writer, @producer, @actor)", connection);
-            cmd.Parameters.AddWithValue("@name", film.Title);
-            cmd.Parameters.AddWithValue("@films", film.Subordinate);
-            cmd.Parameters.AddWithValue("@name", film.Director);
-            cmd.Parameters.AddWithValue("@films", film.Writer);
-            cmd.Parameters.AddWithValue("@name", film.Producer);
-            cmd.Parameters.AddWithValue("@films", film.Actor);
+            cmd.Parameters.AddWithValue("@title", film.Title);
+            cmd.Parameters.AddWithValue("@subordinate", film.Subordinate);
+            cmd.Parameters.AddWithValue("@director", film.Director);
+            cmd.Parameters.AddWithValue("@writer", film.Writer);
+            cmd.Parameters.AddWithValue("@producer", film.Producer);
+            cmd.Parameters.AddWithValue("@actor", film.Actor);
             using var reader = cmd.ExecuteReader();
 
             reader.Read();

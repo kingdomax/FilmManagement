@@ -649,7 +649,7 @@ figure.snip1321.hover:after {
 /* Contact Me */
 
 section.contact-me {
-    border-bottom: none;
+    /*border-bottom: none;*/
 }
 
 #contact input {
@@ -663,6 +663,11 @@ section.contact-me {
     line-height: 40px;
     width: 100%;
     padding-left: 15px;
+}
+
+#contact input.form-check-input {
+    height: 14px;
+    width: 17px;
 }
 
 #contact input:focus {
@@ -824,4 +829,8 @@ section.contact-me {
     .isotope-toolbar {
         margin-bottom: 20px;
     }
+}
+
+.form-control.form-control-mod {
+    border-radius: unset;
 }

@@ -7,9 +7,11 @@ function fetchAndUpdateUsername() {
 }
 
 function fetchAndUpdateBundleResult() {
-    bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show(); // https://getbootstrap.com/docs/5.1/components/modal/
+    // https://getbootstrap.com/docs/5.1/components/modal/
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show();
 
-    $.ajax({ // https://api.jquery.com/jquery.ajax/
+    // https://api.jquery.com/jquery.ajax/
+    $.ajax({
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
@@ -26,8 +28,11 @@ function fetchAndUpdateBundleResult() {
         // re-render UI
         setTimeout(() => {
             renderFilms(data.films);
+            renderAddFilm(data.films);
             renderPersons(data.persons);
+            renderAddPerson();
             renderSuggestionFilms(data.suggestionFilms);
+
             bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).hide();
         }, 1000);
     }).fail(function(xhr, status, errorThrown) {
@@ -37,9 +42,34 @@ function fetchAndUpdateBundleResult() {
     });
 }
 
-function requestToDeleteFilm() {
-    var deletedFilm = window.bundleResult.films[window.currentFilm];
+function requestToAddFilm(addedFilm) {
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show();
     
+    $.ajax({
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        url: `http://localhost:5000/api/film/AddFilm`,
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8', // type of request object
+        data: JSON.stringify(addedFilm),
+    }).done(function(data) {
+        console.log(`add film status: ${data}`);
+        console.log(addedFilm);
+        
+        document.querySelector('.add-film-form').reset();
+
+        fetchAndUpdateBundleResult();
+    }).fail(function(xhr, status, errorThrown) {
+        document.getElementById('modal-content').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                ${status}, ${errorThrown}
+                                                              </div>`;
+    });
+}
+
+function requestToDeleteFilm(deletedFilm) {
     $.ajax({
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -61,22 +91,18 @@ function requestToDeleteFilm() {
         console.log(`delete film status: ${data}`);
         console.log(deletedFilm);
         
-        // Hide message modal + Reload UI again
+        // Hide message modal
         bootstrap.Modal.getInstance(document.getElementById('deleteFilmModal')).hide();
-        document.querySelector('#deleteFilmModal .btn-secondary').disabled = false;
-        document.querySelector('#deleteFilmModal .btn-film-delete').disabled = false;
+
         fetchAndUpdateBundleResult();
     }).fail(function(xhr, status, errorThrown) {
-        document.querySelector('#deleteFilmModal .modal-body').innerHTML = 
-        `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
-            ${status}, ${errorThrown}
-        </div>`;
+        document.querySelector('#deleteFilmModal .modal-body').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                                ${status}, ${errorThrown}
+                                                                            </div>`;
     });
 }
 
-function requestToDeletePerson() {
-    var deletedPerson = window.bundleResult.persons[window.currentPerson];
-    
+function requestToDeletePerson(deletedPerson) {
     $.ajax({
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -94,16 +120,14 @@ function requestToDeletePerson() {
         console.log(`delete person status: ${data}`);
         console.log(deletedPerson);
         
-        // Hide message modal + Reload UI again
+        // Hide message modal
         bootstrap.Modal.getInstance(document.getElementById('deletePersonModal')).hide();
-        document.querySelector('#deletePersonModal .btn-secondary').disabled = false;
-        document.querySelector('#deletePersonModal .btn-person-delete').disabled = false;
+
         fetchAndUpdateBundleResult();
     }).fail(function(xhr, status, errorThrown) {
-        document.querySelector('#deletePersonModal .modal-body').innerHTML = 
-        `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
-            ${status}, ${errorThrown}
-        </div>`;
+        document.querySelector('#deletePersonModal .modal-body').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                                ${status}, ${errorThrown}
+                                                                              </div>`;
     });
 }
 

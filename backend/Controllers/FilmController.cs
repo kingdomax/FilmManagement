@@ -18,6 +18,18 @@ namespace FilmManagement.Controllers
             return _filmService.GetBundleResult(username);
         }
 
+        [HttpPost] // http://localhost:5000/api/film/AddFilm
+        public string AddFilm([FromBody] AddedFilm film)
+        {
+            return _filmService.AddFilm(film);
+        }
+
+        [HttpPost] // http://localhost:5000/api/film/AddFilm
+        public string AddPerson([FromBody] AddedPerson person)
+        {
+            return _filmService.AddPerson(person);
+        }
+
         [HttpPost] // http://localhost:5000/api/film/DeleteFilm
         public string DeleteFilm([FromBody] DeletedFilm film)
         {
