@@ -30,7 +30,7 @@ function fetchAndUpdateBundleResult() {
             renderFilms(data.films);
             renderAddFilm(data.films);
             renderPersons(data.persons);
-            renderAddPerson();
+            renderAddPerson(data.films);
             renderSuggestionFilms(data.suggestionFilms);
 
             bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).hide();
@@ -43,8 +43,6 @@ function fetchAndUpdateBundleResult() {
 }
 
 function requestToAddFilm(addedFilm) {
-    bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show();
-    
     $.ajax({
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -69,6 +67,31 @@ function requestToAddFilm(addedFilm) {
     });
 }
 
+function requestToAddPerson(addedPerson) {
+    $.ajax({
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        url: `http://localhost:5000/api/film/AddPerson`,
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8', // type of request object
+        data: JSON.stringify(addedPerson),
+    }).done(function(data) {
+        console.log(`add person status: ${data}`);
+        console.log(addedPerson);
+        
+        document.querySelector('.add-person-form').reset();
+
+        fetchAndUpdateBundleResult();
+    }).fail(function(xhr, status, errorThrown) {
+        document.getElementById('modal-content').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                ${status}, ${errorThrown}
+                                                              </div>`;
+    });
+}
+
 function requestToDeleteFilm(deletedFilm) {
     $.ajax({
         headers: {
@@ -79,14 +102,7 @@ function requestToDeleteFilm(deletedFilm) {
         url: `http://localhost:5000/api/film/DeleteFilm`,
         method: 'POST',
         contentType: 'application/json; charset=utf-8', // type of request object
-        data: JSON.stringify({ 
-            Title: deletedFilm.title,
-            Actor: deletedFilm.actor ? deletedFilm.actor : '',
-            Writer: deletedFilm.writer ? deletedFilm.writer : '',
-            Director: deletedFilm.director ? deletedFilm.director : '',
-            Producer: deletedFilm.producer ? deletedFilm.producer : '',
-            Subordinate: deletedFilm.subordinate ? deletedFilm.subordinate : '',
-        }),
+        data: JSON.stringify(deletedFilm),
     }).done(function(data) {
         console.log(`delete film status: ${data}`);
         console.log(deletedFilm);
@@ -112,10 +128,7 @@ function requestToDeletePerson(deletedPerson) {
         url: `http://localhost:5000/api/film/DeletePerson`,
         method: 'POST',
         contentType: 'application/json; charset=utf-8', // type of request object
-        data: JSON.stringify({ 
-            Name: deletedPerson.name,
-            Films: deletedPerson.films,
-        }),
+        data: JSON.stringify(deletedPerson),
     }).done(function(data) {
         console.log(`delete person status: ${data}`);
         console.log(deletedPerson);

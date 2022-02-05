@@ -275,65 +275,70 @@
           <div class="row">
             <div class="right-content">
               <div class="container">
-                <form id="contact">
+                <form id="contact" class="add-person-form" onsubmit="event.preventDefault();">
                   <div class="row">
                     <div class="col-md-12">
                       <input
                         type="text"
-                        id="filmTitle"
+                        id="personName"
                         class="form-control"  
-                        placeholder="Title..."
+                        placeholder="Name..."
                         required
                       />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                       <input
-                        type="text"
-                        id="filmDistributor"
-                        class="form-control"  
-                        placeholder="Published by..."
+                        type="date"
+                        id="personDob"
+                        class="form-control" 
+                        placeholder="Test"
                         required
                       />
                     </div>
-                    <div class="col-md-6">
-                      <input
-                        type="text"
-                        id="filmReleased"
-                        class="form-control"  
-                        placeholder="Release year..."
-                        required
-                      />
+                    <div class="col-md-2">
+                      <select id="personGender" class="form-select" required>
+                        <option value="" selected disabled>Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                      </select>
                     </div>
-                    <div class="col-md-12">
-                      <fieldset>
-                        <input
-                          name="subject"
-                          type="text"
-                          class="form-control"
-                          id="subject"
-                          placeholder="Subject..."
-                          required=""
-                        />
-                      </fieldset>
+                    <div class="col-md-7" style="text-align: left;">
+                      <div class="form-check form-check-inline" style="padding-top: 7px;">
+                        <input type="checkbox" class="form-check-input input-person-role" value="Main Actor">
+                        <label class="form-check-label">Main Actor</label>
+                      </div>
+                      <div class="form-check form-check-inline" style="padding-top: 7px;">
+                        <input type="checkbox" class="form-check-input input-person-role" value="Director">
+                        <label class="form-check-label">Director</label>
+                      </div>
+                      <div class="form-check form-check-inline" style="padding-top: 7px;">
+                        <input type="checkbox" class="form-check-input input-person-role" value="Producer">
+                        <label class="form-check-label">Producer</label>
+                      </div>
+                      <div class="form-check form-check-inline" style="padding-top: 7px;">
+                        <input type="checkbox" class="form-check-input input-person-role" value="Writer">
+                        <label class="form-check-label">Writer</label>
+                      </div>
                     </div>
-                    <div class="col-md-12">
-                      <fieldset>
-                        <textarea
-                          name="message"
-                          rows="6"
-                          class="form-control"
-                          id="message"
-                          placeholder="Your message..."
-                          required=""
-                        ></textarea>
-                      </fieldset>
+                    <div class="col-md-1" style="text-align: left;">
+                      <label class="form-check-label">Related:</label>
                     </div>
-                    <div class="col-md-12">
-                      <fieldset>
-                        <button type="submit" id="form-submit" class="button">
-                          Send Message
-                        </button>
-                      </fieldset>
+                    <div id="personRelatedFilms" class="col-md-11" style="text-align: left;">
+                      <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input input-person-related-film" value="Film1">
+                        <label class="form-check-label">Film1</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input input-person-related-film" value="Film2">
+                        <label class="form-check-label">Film2</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input input-person-related-film" value="Film3">
+                        <label class="form-check-label">Film3</label>
+                      </div>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 30px;">
+                        <button id="addPersonBtn" class="btn btn-outline-light">SUBMIT</button>
                     </div>
                   </div>
                 </form>

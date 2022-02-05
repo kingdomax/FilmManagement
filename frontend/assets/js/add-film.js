@@ -14,8 +14,9 @@ function bindAddFilmEvents() {
         var releaseYear = parseInt(document.getElementById('filmReleased').value);
         $('.input-film-genre:checked').each(function(index, element){ genre.push($(element).val()); });
 
-        if (!$('.add-film-form')[0].checkValidity() || genre.length == 0 || !releaseYear) { return; } // If form is not valid or genre are not selected
+        if (!$('.add-film-form')[0].checkValidity() || genre.length == 0 || !releaseYear) { return; } // If form is not valid
 
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show();
         requestToAddFilm({
             Title: document.getElementById('filmTitle').value,
             ReleaseYear: releaseYear,

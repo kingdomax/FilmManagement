@@ -49,7 +49,12 @@ function bindDeletePersonEvents() {
     $('#deletePersonModal .btn-person-delete').bind('click', function() {
         this.disabled = true;
         document.querySelector('#deletePersonModal .btn-secondary').disabled = true;
-        requestToDeletePerson(window.bundleResult.persons[window.currentPerson]);
+
+        var deletedPerson = window.bundleResult.persons[window.currentPerson];
+        requestToDeletePerson({ 
+            Name: deletedPerson.name,
+            Films: deletedPerson.films,
+        });
     });
 }
 

@@ -83,7 +83,16 @@ function bindDeleteFilmEvents() {
     $('#deleteFilmModal .btn-film-delete').bind('click', function() {
         this.disabled = true;
         document.querySelector('#deleteFilmModal .btn-secondary').disabled = true;
-        requestToDeleteFilm(window.bundleResult.films[window.currentFilm]);
+        
+        var deletedFilm = window.bundleResult.films[window.currentFilm];
+        requestToDeleteFilm({ 
+            Title: deletedFilm.title,
+            Actor: deletedFilm.actor ? deletedFilm.actor : '',
+            Writer: deletedFilm.writer ? deletedFilm.writer : '',
+            Director: deletedFilm.director ? deletedFilm.director : '',
+            Producer: deletedFilm.producer ? deletedFilm.producer : '',
+            Subordinate: deletedFilm.subordinate ? deletedFilm.subordinate : '',
+        });
     });
 }
 
