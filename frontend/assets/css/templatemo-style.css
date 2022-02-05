@@ -847,3 +847,10 @@ section.contact-me {
 .form-control.form-control-mod {
     border-radius: unset;
 }
+
+.card.card-subordinate {
+    width: 230px;
+    color: #232323;
+    padding: 7px;
+    margin-left: 135px;
+}

@@ -15,7 +15,7 @@ function renderSuggestionFilm(suggestionFilm, leftPX, topPX) {
                         <h4>${suggestionFilm.title}</h4>
                         <span><b>Publisher: &nbsp;</b>${suggestionFilm.distributor}</span>
                         <span><b>Release: &nbsp;</b>${suggestionFilm.releaseYear}</span>
-                        <span><b>Subordinate: &nbsp;</b>${suggestionFilm.subordinate}</span>
+                        ${suggestionFilm.subordinate ? `<span><b>Subordinate: &nbsp;</b>${suggestionFilm.subordinate}</span>` : ''}
                         <span><b>Genre: &nbsp;</b>${suggestionFilm.genre}</span>
                         <span><b>Producer: &nbsp;</b>${suggestionFilm.director}</span>
                         <span><b>Director: &nbsp;</b>${suggestionFilm.producer}</span>

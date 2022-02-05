@@ -94,6 +94,30 @@ function requestToAddPerson(addedPerson) {
     });
 }
 
+function requestToEditFilm(editedFilm) {
+    $.ajax({
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        url: `http://localhost:5000/api/film/EditFilm`,
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8', // type of request object
+        data: JSON.stringify(editedFilm),
+    }).done(function(data) {
+        console.log(`edit film status: ${data}`);
+        console.log(editedFilm);
+
+        fetchAndUpdateBundleResult();
+    }).fail(function(xhr, status, errorThrown) {
+        // change to edit modal instead
+        document.getElementById('modal-content').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                ${status}, ${errorThrown}
+                                                              </div>`;
+    });
+}
+
 function requestToDeleteFilm(deletedFilm) {
     $.ajax({
         headers: {

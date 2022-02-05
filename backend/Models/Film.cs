@@ -17,7 +17,7 @@ namespace FilmManagement.Models
 
         public string Distributor { get; set; }
         public string Overview { get; set; }
-        public int Rating { get; set; } //1-5
+        public int Rating { get; set; } //0-5
         public string ImgPath { get; set; }
     }
 }

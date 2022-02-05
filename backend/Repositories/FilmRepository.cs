@@ -38,7 +38,7 @@ namespace FilmManagement.Repositories
 
                     Distributor = !reader.IsDBNull(9) ? reader.GetString(9) : string.Empty,
                     Overview = !reader.IsDBNull(10) ? reader.GetString(10) : string.Empty,
-                    Rating = !reader.IsDBNull(11) ? reader.GetInt32(11) : -1,
+                    Rating = !reader.IsDBNull(11) ? reader.GetInt32(11) : 0,
                 });
             }
             return resultFromDB;
