@@ -21,17 +21,19 @@ function fetchAndUpdateBundleResult() {
         method: 'GET',
     }).done(function(data) {
         // update data
+        var ids = data.suggestionFilms.map(o => o.id);
+        var uniqueSuggestionFilms = data.suggestionFilms.filter(({id}, index) => !ids.includes(id, index + 1));
+        window.bundleResult = { ...data, suggestionFilms: uniqueSuggestionFilms };
         console.log('data is updated.');
-        console.log(data);
-        window.bundleResult = data;
+        console.log(window.bundleResult);
 
         // re-render UI
         setTimeout(() => {
-            renderFilms(data.films);
-            renderAddFilm(data.films);
-            renderPersons(data.persons);
-            renderAddPerson(data.films);
-            renderSuggestionFilms(data.suggestionFilms);
+            renderFilms(window.bundleResult.films);
+            renderAddFilm(window.bundleResult.films);
+            renderPersons(window.bundleResult.persons);
+            renderAddPerson(window.bundleResult.films);
+            renderSuggestionFilms(window.bundleResult.suggestionFilms);
 
             bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).hide();
         }, 1000);

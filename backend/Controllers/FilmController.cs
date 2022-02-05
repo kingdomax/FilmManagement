@@ -30,6 +30,18 @@ namespace FilmManagement.Controllers
             return _filmService.AddPerson(person);
         }
 
+        [HttpPost] // http://localhost:5000/api/film/EditFilm
+        public string EditFilm([FromBody] EditedFilm film)
+        {
+            return _filmService.EditFilm(film);
+        }
+
+        [HttpPost] // http://localhost:5000/api/film/EditPerson
+        public string EditPerson([FromBody] EditedPerson person)
+        {
+            return _filmService.EditPerson(person);
+        }
+
         [HttpPost] // http://localhost:5000/api/film/DeleteFilm
         public string DeleteFilm([FromBody] DeletedFilm film)
         {

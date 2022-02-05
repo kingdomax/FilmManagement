@@ -1,22 +1,16 @@
-﻿using System.Collections.Generic;
-
-namespace FilmManagement.Models.DTO
+﻿namespace FilmManagement.Models.Request
 {
-    public class FilmDTO
+    public class EditedFilm
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public int ReleaseYear { get; set; }
         public string Subordinate { get; set; }
         public string[] Genre { get; set; }
-
-        public string Director { get; set; }
-        public string Writer { get; set; }
-        public string Producer { get; set; }
-        public string Actor { get; set; }
-
         public string Distributor { get; set; }
         public string Overview { get; set; }
-        public int Rating { get; set; } //1-5
+        
+        public int Rating { get; set; } //0-5
+        public string Username { get; set; }
     }
 }

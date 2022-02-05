@@ -29,6 +29,7 @@ namespace FilmManagement.Services
             {
                 films.Add(new Film
                 {
+                    Id = resultFromDB[i].Id,
                     Title = resultFromDB[i].Title,
                     ReleaseYear = resultFromDB[i].ReleaseYear,
                     Subordinate = resultFromDB[i].Subordinate,
@@ -58,6 +59,7 @@ namespace FilmManagement.Services
             {
                 persons.Add(new Person
                 {
+                    Id = resultFromDB[i].Id,
                     Name = resultFromDB[i].Name,
                     Dob = resultFromDB[i].Dob,
                     Sex = resultFromDB[i].Sex,
@@ -80,6 +82,18 @@ namespace FilmManagement.Services
         public string AddPerson(AddedPerson person)
         {
             var resultFromDB = _filmRepository.AddPerson(person);
+            return resultFromDB ? "SUCCESS" : "FAILED";
+        }
+
+        public string EditFilm(EditedFilm film)
+        {
+            var resultFromDB = _filmRepository.EditFilm(film);
+            return resultFromDB ? "SUCCESS" : "FAILED";
+        }
+
+        public string EditPerson(EditedPerson person)
+        {
+            var resultFromDB = _filmRepository.EditPerson(person);
             return resultFromDB ? "SUCCESS" : "FAILED";
         }
 
