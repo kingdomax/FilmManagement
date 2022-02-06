@@ -12,9 +12,9 @@ SELECT * FROM remove_film('Test Film1', NULL, 'Test Person1', 'Test Person1', 'T
 
 SELECT * FROM show_person();
 
-SELECT * FROM add_person('Test Person6' ,'21/09/1992', 'F', ARRAY ['Director', 'Writer', 'Main Actor', 'Producer'], ARRAY ['Test Film5']);
+SELECT * FROM add_person('Test Person' ,'21/09/1992', 'F', ARRAY ['Director', 'Writer', 'Main Actor', 'Producer'], ARRAY ['Test Film']);
 
-SELECT * FROM edit_person('41','Test Person 4 change' ,'11/09/1992', 'M', ARRAY ['Director', 'Writer'], ARRAY ['Test Film5']);
+SELECT * FROM edit_person('54','I edit this person' ,'21/09/1992', 'M', ARRAY ['Director', 'Writer', 'Main Actor', 'Producer'], ARRAY ['Test Film']);
 
 SELECT * FROM remove_person('Test Person3',ARRAY ['Test Film5','Test Film3','Test Film4']);
 

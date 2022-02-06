@@ -10,19 +10,19 @@ namespace FilmManagement.Services
         private readonly FilmRepository _filmRepository;
         public FilmService() => _filmRepository = new FilmRepository();
 
-        public BundleResult GetBundleResult(string username)
+        public BundleResult GetBundleResult(FetchBundleRequest bundleRequest)
         {
             return new BundleResult
             {
-                Films = GetFilms(),
+                Films = GetFilms(null),
                 Persons = GetPersons(),
-                SuggestionFilms = GetFilms(username), // todo-moch
+                SuggestionFilms = GetFilms(bundleRequest),
             };
         }
 
-        private IEnumerable<Film> GetFilms(string username = "")
+        private IEnumerable<Film> GetFilms(FetchBundleRequest bundleRequest)
         {
-            var resultFromDB = _filmRepository.FetchFilms(username);
+            var resultFromDB = _filmRepository.FetchFilms(bundleRequest);
 
             var films = new List<Film>();
             for (var i=0; i<resultFromDB.Count; i++)

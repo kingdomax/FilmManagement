@@ -492,11 +492,138 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editFilmModal" data-bs-backdrop="static" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title edit">EDIT</h5>
+          </div>
+          <form class="edit-film-form" onsubmit="event.preventDefault();">
+            <div class="modal-body">
+              <div class="row edit-row">
+                <div class="col-md-8">
+                  <div class="form-floating">
+                    <input
+                      type="text"
+                      id="editFilmTitle"
+                      class="form-control"  
+                      placeholder="Title"
+                      value="Test film"
+                      required
+                    />
+                    <label>Title</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label id="editFilmRatingLabel">Rating</label>
+                    <input
+                      type="range"
+                      id="editFilmRating"
+                      class="form-range"
+                      min="0"
+                      max="5"
+                      value="0"
+                    />
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input
+                      type="text"
+                      id="editFilmDistributor"
+                      class="form-control"
+                      placeholder="Publisher"
+                      value="Test distributor"
+                      required
+                    />
+                    <label>Publisher</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input
+                      type="text"
+                      id="editFilmReleased"
+                      class="form-control" 
+                      placeholder="Release"
+                      value="2022"
+                      required
+                    />
+                    <label>Release</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select id="editFilmSubordinateOptions" class="form-select">
+                      <option value="" selected> </option>
+                      <option value="Test Film1">Test Film1</option>
+                      <option value="Test Film2">Test Film2</option>
+                      <option value="Test Film3">Test Film3</option>
+                    </select>
+                    <label>Subordinate</label>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-floating">
+                    <textarea
+                      id="editFilmOverview"
+                      class="form-control"
+                      style="height:150px" 
+                      placeholder="Overview" 
+                      required
+                    >What is this film about...</textarea>
+                    <label>Overview</label>
+                  </div>
+                </div>
+                <div class="col-md-12" style="text-align:center; margin-top:-6px; margin-bottom:-10px;">
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox1" class="form-check-input edit-film-genre Action" value="Action">
+                    <label class="form-check-label" for="filmCheckbox1">Action</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox2" class="form-check-input edit-film-genre Comedy" value="Comedy">
+                    <label class="form-check-label" for="filmCheckbox2">Comedy</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox3" class="form-check-input edit-film-genre Drama" value="Drama">
+                    <label class="form-check-label" for="filmCheckbox3">Drama</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox4" class="form-check-input edit-film-genre Fantasy" value="Fantasy">
+                    <label class="form-check-label" for="filmCheckbox4">Fantasy</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox5" class="form-check-input edit-film-genre Horror" value="Horror">
+                    <label class="form-check-label" for="filmCheckbox5">Horror</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox6" class="form-check-input edit-film-genre Romance" value="Romance">
+                    <label class="form-check-label" for="filmCheckbox6">Romance</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox7" class="form-check-input edit-film-genre Sci-fi" value="Sci-fi">
+                    <label class="form-check-label" for="filmCheckbox7">Sci-fi</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" id="filmCheckbox8" class="form-check-input edit-film-genre Spy" value="Spy">
+                    <label class="form-check-label" for="filmCheckbox8">Spy</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCLE</button>
+              <button class="btn btn-primary btn-film-edit">EDIT</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="deleteFilmModal" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">DELETE</h5>
+            <h5 class="modal-title delete">DELETE FILM</h5>
           </div>
           <div class="modal-body">
             Are you sure to remove <b>"The Kings Man"</b> and its related information from the database?
@@ -513,7 +640,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">DELETE</h5>
+            <h5 class="modal-title delete">DELETE</h5>
           </div>
           <div class="modal-body">
             Are you sure to remove <b>"Keanu Reeves"</b> and its related information from the database?

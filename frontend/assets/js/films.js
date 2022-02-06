@@ -45,7 +45,7 @@ function renderLeftPost(index, film, containerClass) {
                             ${film.producer ? `<p><b>Producer: &nbsp;</b>${film.producer}</p>` : ''}
                             ${film.writer ? `<p><b>Writer: &nbsp;</b>${film.writer}</p>` : ''}
                             ${film.actor ? `<p><b>Actor: &nbsp;</b>${film.actor}</p>` : ''}
-                            <button type='button' class='btn btn-primary btn-film' data-section='${index}'>EDIT</button>
+                            <button type='button' class='btn btn-primary btn-film btn-film-edit' data-section='${index}'>EDIT</button>
                             <button type="button" class='btn btn-danger btn-film btn-film-delete' data-section='${index}'>DELETE</button>
                         </div>
                     </div>
@@ -67,7 +67,7 @@ function renderRightPost(index, film, containerClass) {
                             ${film.producer ? `<p><b>Producer: &nbsp;</b>${film.producer}</p>` : ''}
                             ${film.writer ? `<p><b>Writer: &nbsp;</b>${film.writer}</p>` : ''}
                             ${film.actor ? `<p><b>Actor: &nbsp;</b>${film.actor}</p>` : ''}
-                            <button type='button' class='btn btn-primary btn-film' data-section='${index}'>EDIT</button>
+                            <button type='button' class='btn btn-primary btn-film btn-film-edit' data-section='${index}'>EDIT</button>
                             <button type="button" class='btn btn-danger btn-film btn-film-delete' data-section='${index}'>DELETE</button>
                         </div>
                     </div>
@@ -91,18 +91,89 @@ function renderAllFilms(films) {
     document.getElementById('filmList').innerHTML = filmList;
 }
 
+function bindEditFilmEvents() {
+    // Rating label
+    $('#editFilmRating').unbind('input');
+    $('#editFilmRating').bind('input', function() { document.getElementById('editFilmRatingLabel').innerHTML = `Rating ${$(this).val()}`; });
+    
+    // Edit button on film list
+    $('.film .btn-film-edit').unbind('click');
+    $('.film .btn-film-edit').bind('click', function() {
+        // set data to window object
+        window.currentFilmIndex = parseInt(this.dataset.section);
+        var currentFilm = window.bundleResult.films[window.currentFilmIndex];
+
+        // re-render rating
+        document.querySelector('#editFilmRatingLabel').innerHTML = `Rating ${currentFilm.rating}`;
+
+        // re-render subordinate options
+        var allFilmsExceptMe = window.bundleResult.films.filter((film) => film.id != currentFilm.id);
+        var options = 'option value="" selected> </option>';
+        for (var i=0; i<allFilmsExceptMe.length; i++) {
+            var opt = allFilmsExceptMe[i].title;
+            options += `<option value="${opt}">${opt}</option>`;
+        }
+        document.querySelector('#editFilmSubordinateOptions').innerHTML = options;
+
+        // re-render genre
+        $('.edit-film-genre').prop('checked', false);
+        for (var i=0; i<currentFilm.genre.length; i++) { $(`.edit-film-genre.${currentFilm.genre[i]}`).prop('checked', true); }
+
+        // set value
+        document.querySelector('#editFilmModal .modal-title').innerHTML = currentFilm.title;
+        document.querySelector('#editFilmTitle').value = currentFilm.title;
+        document.querySelector('#editFilmRating').value = currentFilm.rating;
+        document.querySelector('#editFilmDistributor').value = currentFilm.distributor;
+        document.querySelector('#editFilmReleased').value = currentFilm.releaseYear;
+        document.querySelector('#editFilmSubordinateOptions').value = currentFilm.subordinate;
+        document.querySelector('#editFilmOverview').value = currentFilm.overview;
+        
+        // show modal
+        document.querySelector('#editFilmModal .btn-secondary').disabled = false;
+        document.querySelector('#editFilmModal .btn-film-edit').disabled = false;
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('editFilmModal')).show();
+    });
+
+    // Edit button on modal
+    $('#editFilmModal .btn-film-edit').unbind('click');
+    $('#editFilmModal .btn-film-edit').bind('click', function() {
+        // Validate input
+        var genre = [];
+        var rating = parseInt(document.querySelector('#editFilmRating').value);
+        var releaseYear = parseInt(document.getElementById('editFilmReleased').value);
+        $('.edit-film-genre:checked').each(function(index, element){ genre.push($(element).val()); });
+        if (!$('.edit-film-form')[0].checkValidity() || genre.length == 0 || !releaseYear) { return; } 
+        
+        this.disabled = true;
+        document.querySelector('#editFilmModal .btn-secondary').disabled = true;
+        
+        window.editedFilmId = window.bundleResult.films[window.currentFilmIndex].id;
+        requestToEditFilm({ 
+            Id: window.editedFilmId,
+            Title: document.querySelector('#editFilmTitle').value,
+            ReleaseYear: releaseYear,
+            Subordinate: document.querySelector('#editFilmSubordinateOptions').value,
+            Genre: genre,
+            Distributor: document.querySelector('#editFilmDistributor').value,
+            Overview: document.querySelector('#editFilmOverview').value,
+            Rating: rating,
+            Username: window.bundleResult.films[window.currentFilmIndex].rating != rating ? [window.username] : null, // send only when user edit rating
+        });
+    });
+}
+
 function bindDeleteFilmEvents() {
-    // Delete button on movie list
+    // Delete button on film list
     $('.film .btn-film-delete').unbind('click');
     $('.film .btn-film-delete').bind('click', function() {
-        window.currentFilm = parseInt(this.dataset.section);
+        window.currentFilmIndex = parseInt(this.dataset.section);
+        var currentFilm = window.bundleResult.films[window.currentFilmIndex];
         
-        var deleteFilmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteFilmModal'));
-        document.querySelector('#deleteFilmModal .modal-body').innerHTML = `Are you sure to remove <b>"${window.bundleResult.films[window.currentFilm].title}"</b> and its related information from the database?`;
+        document.querySelector('#deleteFilmModal .modal-body').innerHTML = `Are you sure to remove <b>"${currentFilm.title}"</b> and its related information from the database?`;
+
         document.querySelector('#deleteFilmModal .btn-secondary').disabled = false;
         document.querySelector('#deleteFilmModal .btn-film-delete').disabled = false;
-        
-        deleteFilmModal.show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteFilmModal')).show();
     });
 
     // Delete button on modal
@@ -111,7 +182,7 @@ function bindDeleteFilmEvents() {
         this.disabled = true;
         document.querySelector('#deleteFilmModal .btn-secondary').disabled = true;
         
-        var deletedFilm = window.bundleResult.films[window.currentFilm];
+        var deletedFilm = window.bundleResult.films[window.currentFilmIndex];
         requestToDeleteFilm({ 
             Title: deletedFilm.title,
             Actor: deletedFilm.actor ? deletedFilm.actor : '',
@@ -125,5 +196,6 @@ function bindDeleteFilmEvents() {
 
 function renderFilms(films) {
     renderAllFilms(films);
+    bindEditFilmEvents();
     bindDeleteFilmEvents();
 }

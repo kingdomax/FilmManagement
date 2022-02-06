@@ -11,13 +11,18 @@ namespace FilmManagement.Repositories
     {
         private readonly string _connextionString = "Host=localhost;Username=postgres;Password=pgadmin1234;Database=film";
 
-        public List<FilmDTO> FetchFilms(string username)
+        public List<FilmDTO> FetchFilms(FetchBundleRequest bundleRequest)
         {
             using var connection = new NpgsqlConnection(_connextionString);
             connection.Open();
 
-            var query = string.IsNullOrEmpty(username) ? "SELECT * FROM show_film();" : $"SELECT * FROM show_suggestion('{username}')";
-            using var command = new NpgsqlCommand(query, connection);
+            using var command = new NpgsqlCommand("SELECT * FROM show_film();", connection);
+            if (bundleRequest != null)
+            {
+                command.CommandText = "SELECT * FROM show_suggestion(@editedFilmId, @username);";
+                command.Parameters.AddWithValue("@editedFilmId", bundleRequest.EditedFilmId);
+                command.Parameters.AddWithValue("@username", bundleRequest.Username);
+            }  
             using var reader = command.ExecuteReader();
 
             var resultFromDB = new List<FilmDTO>();

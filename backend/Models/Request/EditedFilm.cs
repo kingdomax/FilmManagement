@@ -11,6 +11,6 @@
         public string Overview { get; set; }
         
         public int Rating { get; set; } //0-5
-        public string Username { get; set; }
+        public string[] Username { get; set; }
     }
 }

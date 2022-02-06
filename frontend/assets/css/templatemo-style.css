@@ -854,3 +854,17 @@ section.contact-me {
     padding: 7px;
     margin-left: 135px;
 }
+
+.modal-title.delete {
+    color: red;
+    font-weight: bold;
+}
+
+.modal-title.edit {
+    color: #0b5ed7;
+    font-weight: bold;
+}
+
+.edit-row div {
+    margin-bottom: 10px;
+}

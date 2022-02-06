@@ -17,8 +17,13 @@ function fetchAndUpdateBundleResult() {
             'Access-Control-Allow-Methods': '*',
             'Access-Control-Allow-Headers': 'Content-Type',
         },
-        url: `http://localhost:5000/api/film/Get/${window.username}`,
-        method: 'GET',
+        url: `http://localhost:5000/api/film/FetchBundleResult`,
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8', // type of request object
+        data: JSON.stringify({
+            EditedFilmId: window.editedFilmId ?? 0,
+            Username: [window.username],
+        }),
     }).done(function(data) {
         // update data
         var ids = data.suggestionFilms.map(o => o.id);
@@ -53,7 +58,7 @@ function requestToAddFilm(addedFilm) {
         },
         url: `http://localhost:5000/api/film/AddFilm`,
         method: 'POST',
-        contentType: 'application/json; charset=utf-8', // type of request object
+        contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(addedFilm),
     }).done(function(data) {
         console.log(`add film status: ${data}`);
@@ -103,18 +108,20 @@ function requestToEditFilm(editedFilm) {
         },
         url: `http://localhost:5000/api/film/EditFilm`,
         method: 'POST',
-        contentType: 'application/json; charset=utf-8', // type of request object
+        contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(editedFilm),
     }).done(function(data) {
         console.log(`edit film status: ${data}`);
         console.log(editedFilm);
 
+        bootstrap.Modal.getInstance(document.getElementById('editFilmModal')).hide();
+
         fetchAndUpdateBundleResult();
     }).fail(function(xhr, status, errorThrown) {
         // change to edit modal instead
-        document.getElementById('modal-content').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
-                                                                ${status}, ${errorThrown}
-                                                              </div>`;
+        document.querySelector('#editFilmModal .modal-body').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                            ${status}, ${errorThrown}
+                                                                        </div>`;
     });
 }
 

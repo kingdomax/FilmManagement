@@ -34,14 +34,14 @@ function bindDeletePersonEvents() {
     // Delete button on person
     $('.person .btn-person-delete').unbind('click');
     $('.person .btn-person-delete').bind('click', function() {
-        window.currentPerson = parseInt(this.dataset.section);
+        window.currentPersonIndex = parseInt(this.dataset.section);
+        var currentPerson = window.bundleResult.films[window.currentFilmIndex];
         
-        var deletePersonModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deletePersonModal'));
-        document.querySelector('#deletePersonModal .modal-body').innerHTML = `Are you sure to remove <b>"${window.bundleResult.persons[window.currentPerson].name}"</b> and its related information from the database?`;
+        document.querySelector('#deletePersonModal .modal-body').innerHTML = `Are you sure to remove <b>"${currentPerson.name}"</b> and its related information from the database?`;
+        
         document.querySelector('#deletePersonModal .btn-secondary').disabled = false;
         document.querySelector('#deletePersonModal .btn-person-delete').disabled = false;
-        
-        deletePersonModal.show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('deletePersonModal')).show();
     });
 
     // Delete button on modal
@@ -50,7 +50,7 @@ function bindDeletePersonEvents() {
         this.disabled = true;
         document.querySelector('#deletePersonModal .btn-secondary').disabled = true;
 
-        var deletedPerson = window.bundleResult.persons[window.currentPerson];
+        var deletedPerson = window.bundleResult.persons[window.currentPersonIndex];
         requestToDeletePerson({ 
             Name: deletedPerson.name,
             Films: deletedPerson.films,

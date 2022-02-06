@@ -5,7 +5,7 @@
 -- Dumped from database version 14.1
 -- Dumped by pg_dump version 14.1
 
--- Started on 2022-02-05 23:10:49
+-- Started on 2022-02-06 19:43:07
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -45,7 +45,7 @@ $_$;
 ALTER FUNCTION public.add_film(title text, release integer, subordinate text, genre text[], distributor text, overview text) OWNER TO postgres;
 
 --
--- TOC entry 225 (class 1255 OID 49368)
+-- TOC entry 226 (class 1255 OID 49368)
 -- Name: add_person(text, text, text, text[], text[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -72,19 +72,19 @@ ELSE
 			CASE role
 			WHEN 'Director' THEN
 				UPDATE public.film_storage 
-				SET film_director = $1
+				SET film_director = $2
 				WHERE film_title = film;
 			WHEN 'Writer' THEN	
 				UPDATE public.film_storage 
-				SET film_writer = $1
+				SET film_writer = $2
 				WHERE film_title = film;
 			WHEN 'Producer' THEN	
 				UPDATE public.film_storage 
-				SET film_producer = $1
+				SET film_producer = $2
 				WHERE film_title = film;
 			WHEN 'Main Actor' THEN	
 				UPDATE public.film_storage 
-				SET film_actor = $1
+				SET film_actor = $2
 				WHERE film_title = film;
 			ELSE
 				EXIT;
@@ -102,11 +102,11 @@ $_$;
 ALTER FUNCTION public.add_person(name text, dob text, sex text, roles text[], films text[]) OWNER TO postgres;
 
 --
--- TOC entry 228 (class 1255 OID 49406)
--- Name: edit_film(integer, text, integer, text, text[], text, text, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
+-- TOC entry 224 (class 1255 OID 49446)
+-- Name: edit_film(integer, text, integer, text, text[], text, text, integer, text[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.edit_film(id integer, title text, release integer, subordinate text, genre text[], distributor text, overview text, rating integer, username text) RETURNS boolean
+CREATE FUNCTION public.edit_film(id integer, title text, release integer, subordinate text, genre text[], distributor text, overview text, rating integer, username text[]) RETURNS boolean
     LANGUAGE plpgsql
     AS $_$
 
@@ -129,10 +129,10 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.edit_film(id integer, title text, release integer, subordinate text, genre text[], distributor text, overview text, rating integer, username text) OWNER TO postgres;
+ALTER FUNCTION public.edit_film(id integer, title text, release integer, subordinate text, genre text[], distributor text, overview text, rating integer, username text[]) OWNER TO postgres;
 
 --
--- TOC entry 226 (class 1255 OID 49373)
+-- TOC entry 227 (class 1255 OID 49373)
 -- Name: edit_person(integer, text, text, text, text[], text[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -190,7 +190,7 @@ $_$;
 ALTER FUNCTION public.edit_person(id integer, name text, dob text, sex text, roles text[], films text[]) OWNER TO postgres;
 
 --
--- TOC entry 230 (class 1255 OID 49408)
+-- TOC entry 228 (class 1255 OID 49408)
 -- Name: remove_film(text, text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -306,7 +306,7 @@ $_$;
 ALTER FUNCTION public.remove_film(title text, subordinate text, director text, writer text, producer text, actor text) OWNER TO postgres;
 
 --
--- TOC entry 227 (class 1255 OID 49440)
+-- TOC entry 231 (class 1255 OID 49440)
 -- Name: remove_person(text, text[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -350,7 +350,7 @@ $_$;
 ALTER FUNCTION public.remove_person(name text, films text[]) OWNER TO postgres;
 
 --
--- TOC entry 224 (class 1255 OID 49437)
+-- TOC entry 225 (class 1255 OID 49437)
 -- Name: show_film(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -372,7 +372,7 @@ $$;
 ALTER FUNCTION public.show_film() OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1255 OID 49438)
+-- TOC entry 230 (class 1255 OID 49438)
 -- Name: show_person(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -394,24 +394,36 @@ $$;
 ALTER FUNCTION public.show_person() OWNER TO postgres;
 
 --
--- TOC entry 232 (class 1255 OID 49439)
--- Name: show_suggestion(text); Type: FUNCTION; Schema: public; Owner: postgres
+-- TOC entry 232 (class 1255 OID 49444)
+-- Name: show_suggestion(integer, text[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.show_suggestion(name text) RETURNS TABLE(id integer, title text, release integer, subordinate text, genres text[], director text, writer text, producer text, actor text, distributor text, overview text, rating integer)
+CREATE FUNCTION public.show_suggestion(num integer, name text[]) RETURNS TABLE(id integer, title text, release integer, subordinate text, genres text[], director text, writer text, producer text, actor text, distributor text, overview text, rating integer)
     LANGUAGE plpgsql
-    AS $_$
+    AS $$
 
 DECLARE
  genres RECORD;
  genre TEXT;
  every_genre TEXT[];
+ person text[];
+ person_name text;
+ input_name text;
 
 BEGIN
 
-IF (SELECT EXISTS(SELECT 1 FROM public.film_storage WHERE username = name)) THEN
+input_name := (SELECT ARRAY_TO_STRING(name, ''));
+person:= (SELECT username FROM public.film_storage WHERE film_id = num);
+
+IF (NOT input_name = ANY(person)) THEN 
+	UPDATE public.film_storage SET username = person || name
+	WHERE film_id = num;
+END IF;
+
+
+IF (SELECT EXISTS(SELECT 1 FROM public.film_storage WHERE input_name = ANY(username))) THEN
 	
-	FOR genres IN SELECT film_genre FROM public.film_storage WHERE username = name
+	FOR genres IN SELECT film_genre FROM public.film_storage WHERE input_name = ANY(username)
 	LOOP
 		every_genre:= genres.film_genre;
 	END LOOP;
@@ -421,42 +433,42 @@ IF (SELECT EXISTS(SELECT 1 FROM public.film_storage WHERE username = name)) THEN
 		CASE genre
 		WHEN 'Romance' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Romance' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;
 		WHEN 'Action' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Action' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;				
 		WHEN 'Sci-fi' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Sci-fi' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;			
 		WHEN 'Fantasy' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Fantasy' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;	
 		WHEN 'Spy' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Spy' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;				
 		WHEN 'Comedy' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Comedy' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;			
 		WHEN 'Drama' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Drama' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;		
 		WHEN 'Horror' THEN
 			RETURN QUERY
-			SELECT DISTINCT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
+			SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
 			WHERE 'Horror' = ANY(film_genre) AND film_rating IS NULL
 			ORDER BY film_release DESC;	
 		ELSE
@@ -467,15 +479,15 @@ IF (SELECT EXISTS(SELECT 1 FROM public.film_storage WHERE username = name)) THEN
 ELSE
 	RETURN QUERY
 	SELECT film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating FROM public.film_storage 
-	WHERE username = $1;
+	WHERE username = input_name;
 END IF;
 
 END;
 
-$_$;
+$$;
 
 
-ALTER FUNCTION public.show_suggestion(name text) OWNER TO postgres;
+ALTER FUNCTION public.show_suggestion(num integer, name text[]) OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -541,7 +553,7 @@ CREATE TABLE public.film_storage (
     film_distributor text,
     film_overview text,
     film_rating integer,
-    username text
+    username text[]
 );
 
 
@@ -616,15 +628,15 @@ INSERT INTO public.film_person (person_id, person_name, person_dob, person_sex, 
 --
 
 INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (3, 'The Matrix Revolutions', 2002, 'The Matrix Reloaded', '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'Joel Silver', 'Keanu Reeves', 'Warner Bros. Pictures', 'Neo, humanity only hope of stopping the war and saving Zion, attempts to broker peace between the machines and humans. However, he must first confront his arch-nemesis, the rogue Agent Smith.', NULL, NULL);
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (4, 'The Matrix', 1999, 'The Matrix Revolutions', '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'Joel Silver', 'Keanu Reeves', 'Warner Bros. Pictures', 'Thomas Anderson, a computer programmer, is led to fight an underground war against powerful computers who have constructed his entire reality with a system called the Matrix.', NULL, NULL);
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (5, 'Kingsman: The Golden Circle', 2017, 'The Kings Man', '{Action,Spy,Comedy}', 'Matthew Vaughn', 'Matthew Vaughn', 'Matthew Vaughn', 'Colin Firth', '20th Century Fox', 'After the enemies blow up their headquarters, the surviving agents of Kingsman band together with their American counterpart to take down a ruthless drug cartel.', NULL, NULL);
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (6, 'The Kings Man', 2022, NULL, '{Action,Spy,Comedy}', 'Matthew Vaughn', 'Matthew Vaughn', 'Matthew Vaughn', 'Ralph Fiennes', 'Walt Disney Studios Motion Pictures', 'One man must race against time to stop history worst tyrants and criminal masterminds as they get together to plot a war that could wipe out millions of people and destroy humanity.', NULL, NULL);
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (1, 'The Matrix Resurrections', 2021, NULL, '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'James McTeigue', 'Keanu Reeves', 'Warner Bros. Pictures', 'To find out if his reality is a physical or mental construct, Mr. Anderson, aka Neo, will have to choose to follow the white rabbit once more. If he is learned anything, it is that choice.', NULL, NULL);
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (8, 'Dark Shadows', 2012, NULL, '{Fantasy,Comedy,Horror}', 'Tim Burton', 'John August', 'Richard D. Zanuck', 'Johnny Depp', 'Warner Bros. Pictures', 'Rich playboy Barnabas earns the wrath of Angelique, a witch, when he breaks her heart. She turns him into a vampire and buries him alive. Two centuries later, Barnabas escapes to settle old scores.', NULL, NULL);
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (6, 'The Kings Man', 2022, NULL, '{Action,Spy,Comedy}', 'Matthew Vaughn', 'Matthew Vaughn', 'Matthew Vaughn', 'Ralph Fiennes', 'Walt Disney Studios Motion Pictures', 'One man must race against time to stop history worst tyrants and criminal masterminds as they get together to plot a war that could wipe out millions of people and destroy humanity.', 3, '{admin1,admin2}');
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (5, 'Kingsman: The Golden Circle', 2017, 'The Kings Man', '{Action,Spy,Comedy}', 'Matthew Vaughn', 'Matthew Vaughn', 'Matthew Vaughn', 'Colin Firth', '20th Century Fox', 'After the enemies blow up their headquarters, the surviving agents of Kingsman band together with their American counterpart to take down a ruthless drug cartel.', 5, '{admin2}');
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (4, 'The Matrix', 1999, 'The Matrix Revolutions', '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'Joel Silver', 'Keanu Reeves', 'Warner Bros. Pictures', 'Thomas Anderson, a computer programmer, is led to fight an underground war against powerful computers who have constructed his entire reality with a system called the Matrix.', 3, '{admin1,admin3}');
 INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (7, 'Kingsman: The Secret Service', 2015, 'Kingsman: The Golden Circle', '{Action,Spy,Comedy}', 'Matthew Vaughn', 'Matthew Vaughn', 'Matthew Vaughn', 'Colin Firth', '20th Century Fox', 'Gary ''Eggsy'' Unwin faces several challenges when he gets recruited as a secret agent in a secret spy organisation in order to look for Richmond Valentine, an eco-terrorist.', NULL, NULL);
 INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (9, 'Transcendence', 2014, NULL, '{Sci-fi,Action,Drama}', 'Wally Pfister', 'Wally Pfister', 'Wally Pfister', 'Johnny Depp', 'Warner Bros. Pictures', 'Will desperate wife uploads his consciousness into a quantum computer to save him. He soon begins making groundbreaking discoveries but also displays signs of a dark and hidden motive.', NULL, NULL);
 INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (2, 'The Matrix Reloaded', 2003, 'The Matrix Resurrections', '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'Joel Silver', 'Keanu Reeves', 'Warner Bros. Pictures', 'At the Oracle behest, Neo attempts to rescue the Keymaker and realises that to save Zion within 72 hours, he must confront the Architect. Meanwhile, Zion prepares for war against the machines.', NULL, NULL);
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (8, 'Dark Shadows', 2012, NULL, '{Fantasy,Comedy,Horror}', 'Tim Burton', 'John August', 'Richard D. Zanuck', 'Johnny Depp', 'Warner Bros. Pictures', 'Rich playboy Barnabas earns the wrath of Angelique, a witch, when he breaks her heart. She turns him into a vampire and buries him alive. Two centuries later, Barnabas escapes to settle old scores.', NULL, 'admin1');
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (10, 'Edward Scissorhands', 1991, NULL, '{Fantasy,Romance}', 'Tim Burton', 'Tim Burton', 'Denise Di Novi', 'Johnny Depp', '20th Century Fox', 'Edward, a synthetic man with scissor hands, is taken in by Peg, a kindly Avon lady, after the passing of his inventor. Things take a turn for the worse when he is blamed for a crime he did not commit.', NULL, 'admin1');
-INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (1, 'The Matrix Resurrections', 2021, NULL, '{Sci-fi,Action}', 'Lana Wachowski', 'Lana Wachowski', 'James McTeigue', 'Keanu Reeves', 'Warner Bros. Pictures', 'To find out if his reality is a physical or mental construct, Mr. Anderson, aka Neo, will have to choose to follow the white rabbit once more. If he is learned anything, it is that choice.', NULL, 'admin2');
+INSERT INTO public.film_storage (film_id, film_title, film_release, film_subordinate, film_genre, film_director, film_writer, film_producer, film_actor, film_distributor, film_overview, film_rating, username) VALUES (10, 'Edward Scissorhands', 1991, NULL, '{Fantasy,Romance}', 'Tim Burton', 'Tim Burton', 'Denise Di Novi', 'Johnny Depp', '20th Century Fox', 'Edward, a synthetic man with scissor hands, is taken in by Peg, a kindly Avon lady, after the passing of his inventor. Things take a turn for the worse when he is blamed for a crime he did not commit.', NULL, NULL);
 
 
 --
@@ -663,7 +675,7 @@ ALTER TABLE ONLY public.film_storage
     ADD CONSTRAINT film_storage_pkey PRIMARY KEY (film_id);
 
 
--- Completed on 2022-02-05 23:10:50
+-- Completed on 2022-02-06 19:43:07
 
 --
 -- PostgreSQL database dump complete
