@@ -619,6 +619,96 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editPersonModal" data-bs-backdrop="static" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title edit">EDIT</h5>
+          </div>
+          <form class="edit-person-form" onsubmit="event.preventDefault();">
+            <div class="modal-body">
+              <div class="row edit-row">
+                <div class="col-md-12">
+                  <div class="form-floating">
+                    <input
+                      type="text"
+                      id="editPersonName"
+                      class="form-control"  
+                      placeholder="Name"
+                      value="Test person"
+                      required
+                    />
+                    <label>Name</label>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-floating">
+                  <input
+                    type="date"
+                    id="editPersonDob"
+                    class="form-control" 
+                    placeholder="Born"
+                    value="2022-02-06"
+                    required
+                  />
+                  <label>Born</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-floating">
+                    <select id="editPersonGender" class="form-select" required>
+                      <option value="M" selected>Male</option>
+                      <option value="F">Female</option>
+                    </select>
+                    <label>Gender</label>
+                  </div>
+                </div>
+                <div class="col-md-7" style="padding-top:18px;">
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-role Main-Actor" value="Main Actor">
+                    <label class="form-check-label">Main Actor</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-role Director" value="Director">
+                    <label class="form-check-label">Director</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-role Producer" value="Producer">
+                    <label class="form-check-label">Producer</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-role Writer" value="Writer">
+                    <label class="form-check-label">Writer</label>
+                  </div>
+                </div>
+                <div class="col-md-1" style="margin-bottom:0px;">
+                  <label class="form-check-label">Related:</label>
+                </div>
+                <div class="col-md-11" id="editPersonRelatedFilms" style="margin-bottom:0px;">
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-related-film" value="Film1">
+                    <label class="form-check-label">Film1</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-related-film" value="Film2">
+                    <label class="form-check-label">Film2</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input edit-person-related-film" value="Film3">
+                    <label class="form-check-label">Film3</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCLE</button>
+              <button class="btn btn-primary btn-person-edit">EDIT</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="deleteFilmModal" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -652,7 +742,6 @@
         </div>
       </div>
     </div>
-
   </body>
 
   <!-- Bootstrap core JavaScript -->

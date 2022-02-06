@@ -115,12 +115,11 @@ function bindEditFilmEvents() {
         }
         document.querySelector('#editFilmSubordinateOptions').innerHTML = options;
 
-        // re-render genre
+        // set genre
         $('.edit-film-genre').prop('checked', false);
         for (var i=0; i<currentFilm.genre.length; i++) { $(`.edit-film-genre.${currentFilm.genre[i]}`).prop('checked', true); }
 
-        // set value
-        document.querySelector('#editFilmModal .modal-title').innerHTML = currentFilm.title;
+        // set other values
         document.querySelector('#editFilmTitle').value = currentFilm.title;
         document.querySelector('#editFilmRating').value = currentFilm.rating;
         document.querySelector('#editFilmDistributor').value = currentFilm.distributor;
@@ -129,6 +128,7 @@ function bindEditFilmEvents() {
         document.querySelector('#editFilmOverview').value = currentFilm.overview;
         
         // show modal
+        document.querySelector('#editFilmModal .modal-title').innerHTML = currentFilm.title;
         document.querySelector('#editFilmModal .btn-secondary').disabled = false;
         document.querySelector('#editFilmModal .btn-film-edit').disabled = false;
         bootstrap.Modal.getOrCreateInstance(document.getElementById('editFilmModal')).show();
@@ -157,7 +157,7 @@ function bindEditFilmEvents() {
             Distributor: document.querySelector('#editFilmDistributor').value,
             Overview: document.querySelector('#editFilmOverview').value,
             Rating: rating,
-            Username: window.bundleResult.films[window.currentFilmIndex].rating != rating ? [window.username] : null, // send only when user edit rating
+            Username: window.bundleResult.films[window.currentFilmIndex].rating != rating ? [window.username] : [], // send only when user edit rating
         });
     });
 }

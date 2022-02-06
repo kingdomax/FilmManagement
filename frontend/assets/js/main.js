@@ -125,6 +125,32 @@ function requestToEditFilm(editedFilm) {
     });
 }
 
+function requestToEditPerson(editedPerson) {
+    $.ajax({
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        url: `http://localhost:5000/api/film/EditPerson`,
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(editedPerson),
+    }).done(function(data) {
+        console.log(`edit person status: ${data}`);
+        console.log(editedPerson);
+
+        bootstrap.Modal.getInstance(document.getElementById('editPersonModal')).hide();
+
+        fetchAndUpdateBundleResult();
+    }).fail(function(xhr, status, errorThrown) {
+        // change to edit modal instead
+        document.querySelector('#editPersonModal .modal-body').innerHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 0px;">
+                                                                            ${status}, ${errorThrown}
+                                                                        </div>`;
+    });
+}
+
 function requestToDeleteFilm(deletedFilm) {
     $.ajax({
         headers: {

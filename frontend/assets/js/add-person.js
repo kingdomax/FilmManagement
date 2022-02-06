@@ -24,7 +24,7 @@ function bindAddPersonEvents() {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('loadingModal')).show();
         requestToAddPerson({
             Name: document.getElementById('personName').value,
-            Dob: `${dob.getDate()}/${dob.getMonth()+1}/${dob.getFullYear()}`,
+            Dob: `${dob.getMonth()+1}/${dob.getDate()}/${dob.getFullYear()}`,
             Sex: document.getElementById('personGender').value,
             Roles: roles,
             Films: relatedFilms,
