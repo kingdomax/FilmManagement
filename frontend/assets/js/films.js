@@ -147,9 +147,8 @@ function bindEditFilmEvents() {
         this.disabled = true;
         document.querySelector('#editFilmModal .btn-secondary').disabled = true;
         
-        window.editedFilmId = window.bundleResult.films[window.currentFilmIndex].id;
         requestToEditFilm({ 
-            Id: window.editedFilmId,
+            Id: window.bundleResult.films[window.currentFilmIndex].id,
             Title: document.querySelector('#editFilmTitle').value,
             ReleaseYear: releaseYear,
             Subordinate: document.querySelector('#editFilmSubordinateOptions').value,

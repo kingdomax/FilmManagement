@@ -19,8 +19,7 @@ namespace FilmManagement.Repositories
             using var command = new NpgsqlCommand("SELECT * FROM show_film();", connection);
             if (bundleRequest != null)
             {
-                command.CommandText = "SELECT * FROM show_suggestion(@editedFilmId, @username);";
-                command.Parameters.AddWithValue("@editedFilmId", bundleRequest.EditedFilmId);
+                command.CommandText = "SELECT * FROM show_suggestion(@username);";
                 command.Parameters.AddWithValue("@username", bundleRequest.Username);
             }  
             using var reader = command.ExecuteReader();
