@@ -20,10 +20,7 @@ function fetchAndUpdateBundleResult() {
         url: `http://localhost:5000/api/film/FetchBundleResult`,
         method: 'POST',
         contentType: 'application/json; charset=utf-8', // type of request object
-        data: JSON.stringify({
-            EditedFilmId: window.editedFilmId ?? 0,
-            Username: [window.username],
-        }),
+        data: JSON.stringify({ Username: [window.username] }),
     }).done(function(data) {
         // update data
         var ids = data.suggestionFilms.map(o => o.id);
@@ -64,6 +61,7 @@ function requestToAddFilm(addedFilm) {
         console.log(`add film status: ${data}`);
         console.log(addedFilm);
         
+        if (data == 'FAILED') { alert(`add film status: ${data} (This film is already exist in database)`); }
         document.querySelector('.add-film-form').reset();
 
         fetchAndUpdateBundleResult();
@@ -89,6 +87,7 @@ function requestToAddPerson(addedPerson) {
         console.log(`add person status: ${data}`);
         console.log(addedPerson);
         
+        if (data == 'FAILED') { alert(`add person status: ${data} (This person is already exist in database)`); }
         document.querySelector('.add-person-form').reset();
 
         fetchAndUpdateBundleResult();
