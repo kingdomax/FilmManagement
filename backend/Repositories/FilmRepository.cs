@@ -9,7 +9,7 @@ namespace FilmManagement.Repositories
 {
     public class FilmRepository
     {
-        private readonly string _connextionString = "Host=localhost;Username=postgres;Password=pgadmin1234;Database=film";
+        private readonly string _connextionString = "Host=localhost;Username=postgres;Password=admin1234;Database=film";
 
         public List<FilmDTO> FetchFilms(FetchBundleRequest bundleRequest)
         {
