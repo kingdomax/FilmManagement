@@ -12,7 +12,7 @@ CREATE TABLE film_storage (
   film_distributor TEXT,
   film_overview TEXT,
   film_rating INTEGER,
-  username TEXT,
+  username TEXT[],
   PRIMARY KEY (film_id)
 );
 
