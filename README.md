@@ -1,87 +1,59 @@
-# Project Title
+# FilmManagement
 
-One Paragraph of project description goes here
+  This WEB API is about Backoffice of Film Managment, which have many features; Show Film/Person, Add Film/Person, Edit Film/Person, Delete Film/Person, Add Film Rating and Show Film suggestion; The application have 3 sections which are Client(HTML Javascript), Sever(.NET C#) and Database(Postgresql PL/pgSQL). All of the logics will be implemented under function in the database.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Before running the application, there are required programs which need to installed on local computer. 
+*Please note that, this application is implemented base on Window OS.*
+1. **'pgAdmin 4'** or any IDE that can open Postgresql Database.
+2. **'Microsoft Visual Studio 2019'** or newest version.
 
-### Prerequisites
+### Import Tables and Functions to Local Database
 
-What things you need to install the software and how to install them
-
+1. After extract the **FilmManagement.zip** file, inside folder **FilmManagement** you will see folder **database** which have SQL file call 'db_data' inside.
 ```
-Give examples
+db_data.sql
 ```
+2. Open **'pgAdmin 4'** from the programe menu click on **'Tools>Query Tool'**.
+3. At Editoe area, you can find **Open File** icon, click on it and choose **'db_data.sql'**.
+4. After file open, click on **Execute** icon (or press 'F5'). Tables and Functions will successfully create.
 
-### Installing
+### Run Server side via Microsoft Visual Studio
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+1. After extract the **FilmManagement.zip** file, you will see folder **FilmManagement**. inside of it must have .sln file call **FilmManagement.sln**.
 ```
-Give the example
+FilmManagement.sln
 ```
-
-And repeat
-
+2. Double click on it will open the project on Microsoft visual studio.
+3. Go to file **'FilmRepository.cs'** in **Repositories** folder, and change database username and password to match your own local database.
 ```
-until finished
+private readonly string _connextionString = "Host=localhost;Username=postgres;Password=admin1234;Database=film";
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+4. Excecute the program (press F5). Terminal will open up with successfully connection.
 ```
-Give an example
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: ~\FilmManagement\backend
 ```
 
-### And coding style tests
+### Open Webpage
 
-Explain what these tests test and why
-
+1. After extract the **FilmManagement.zip** file, inside folder **FilmManagement** you will see folder **frontend** which have HTML file call 'index' inside.
 ```
-Give an example
+index.html
 ```
+2. Double click on it will open the browser with FilmManagment application.
 
-## Deployment
 
-Add additional notes about how to deploy this on a live system
+### Acknowledgments
 
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* For user features will be controlled by putting the query string **‘?username=value’** which value is an admin1, admin2, admin3, admin4 and admin5. 
+```
+file:~/FilmManagement/frontend/index.html?username=admin1
+```
