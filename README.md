@@ -51,9 +51,16 @@ index.html
 2. Double click on it will open the browser with FilmManagment application.
 
 
-### Acknowledgments
+## Testing application with different username
 
-* For user features will be controlled by putting the query string **‘?username=value’** which value is an admin1, admin2, admin3, admin4 and admin5. 
+For user features will be controlled by putting the query string **‘?username=value’** which value is an admin1, admin2, admin3, admin4 and admin5.
 ```
 file:~/FilmManagement/frontend/index.html?username=admin1
 ```
+
+1. **admin1** have rate 5 out of 10 films in the database.
+2. **admin2** have rate 5 out of 10 films in the database.
+3. **admin3** have rate 5 out of 10 films in the database.
+4. **admin4** have rate 8 out of 10 films in the database.
+5. **admin5** have rate no film.
+
